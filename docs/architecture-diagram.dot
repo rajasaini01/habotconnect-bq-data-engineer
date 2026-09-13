@@ -1,0 +1,37 @@
+digraph HabotConnectPipeline {
+    rankdir=TB;
+    fontname="Helvetica";
+    node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#F2F2F2", color="#333333"];
+    edge [fontname="Helvetica", fontsize=10, color="#555555"];
+
+    label="HabotConnect Student Onboarding Pipeline — Raja Saini (rajasaini092004@gmail.com)";
+    labelloc="t";
+    fontsize=16;
+
+    Form [label="Student Onboarding Form\n(JSON payload)", shape=note, fillcolor="#E8F0FE"];
+    DRF [label="Django REST Framework\nSerializer\n(exact field limits + DCYN)", fillcolor="#D2E3FC"];
+    PubSub [label="Pub/Sub Topic\nonboarding-events", fillcolor="#FEEFC3"];
+    CF [label="Cloud Function\n(schema validation)", fillcolor="#FEEFC3"];
+    D0 [label="GCS Bucket\nD0 Raw Landing\n(uniform access, versioned,\npublic access prevented)", fillcolor="#CEEAD6"];
+    DLQ [label="Dead-Letter Topic\n(rejected / malformed payloads)", shape=note, fillcolor="#FAD2CF"];
+    D1 [label="BigQuery Dataset\nD1 Staged / Enforced\n(partitioned, clustered,\nRow-Level Security, Policy Tags)", fillcolor="#CEEAD6"];
+    Analysts [label="Analyst Group\n(region-restricted read access)", shape=oval, fillcolor="#F3E8FD"];
+    Admins [label="Admin Group\n(dataOwner)", shape=oval, fillcolor="#F3E8FD"];
+
+    CI [label="GitHub Actions\nPoka-Yoke Build Gate\n(lint + fmt + secret scan)", shape=box, fillcolor="#FFF0E0"];
+    Repo [label="Git Repository\n(Terraform, Python)", shape=folder, fillcolor="#FFF0E0"];
+
+    Form -> DRF [label="POST"];
+    DRF -> PubSub [label="valid payload"];
+    DRF -> DLQ [label="invalid payload\n(400 response)", style=dashed];
+    PubSub -> CF;
+    CF -> D0 [label="raw copy"];
+    CF -> DLQ [label="schema mismatch", style=dashed];
+    D0 -> D1 [label="validated load"];
+    D1 -> Analysts [label="row-restricted\nSELECT"];
+    D1 -> Admins [label="full access"];
+
+    Repo -> CI [label="push / PR"];
+    CI -> D0 [label="terraform apply\n(gate must pass first)", style=dotted];
+    CI -> D1 [label="terraform apply\n(gate must pass first)", style=dotted];
+}

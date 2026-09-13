@@ -1,0 +1,13 @@
+{
+  "student_full_name": "Aarav Mehta",
+  "parent_email": "priya.mehta@example.com",
+  "parent_phone": "+919812345678",
+  "date_of_birth": "2016-03-14",
+  "lsa_region": "west",
+  "onboarding_date": "2026-08-05",
+  "consent_data_processing": true,
+  "diagnosed_learning_need": true,
+  "requires_financial_assistance": false,
+  "lsa_previously_assigned": null,
+  "additional_notes": "Parent requested a Hindi-speaking LSA if available."
+}
