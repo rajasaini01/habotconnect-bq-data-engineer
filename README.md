@@ -3,7 +3,7 @@
 **Candidate:** Raja Saini
 **Email:** rajasaini092004@gmail.com
 **Submission for:** Associate BigQuery Data Engineer, HabotConnect FZCO
-**Date:** 5 August 2026
+**Date:** 13 September 2026
 
 ---
 
